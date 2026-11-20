@@ -41,8 +41,11 @@ class Entity
     // Extra arguments go to T's constructor after entity pointer
     // Lab 5 - adding a component
     template <typename T, typename... Targs>
+    // shared_ptr is a pointer that deletes the object when the last owner lets go
+    // passes extra arguments to the components constructor
     std::shared_ptr<T> add_component(Targs &&...params)
     {
+        // compile error when adding something that isn't in the component
         static_assert(std::is_base_of<Component, T>::value, "T != component");
         std::shared_ptr<T> sp(std::make_shared<T>(this, std::forward<Targs>(params)...));
         _components.push_back(sp);
