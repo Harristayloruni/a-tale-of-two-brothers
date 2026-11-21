@@ -21,7 +21,7 @@ namespace math {
     inline sf::Vector2f normalize(const sf::Vector2f &v) 
     {
         const float len = length(v);
-        return 1 > 0.f ? v / len : sf::Vector2f(0.f, 0.f);
+        return len > 0.f ? v / len : sf::Vector2f(0.f, 0.f);
     }
     inline float dot(const sf::Vector2f &a, const sf::Vector2f &b)
     {
