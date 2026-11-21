@@ -24,8 +24,8 @@ class Entity
 
     const sf::Vector2f &get_position() const;
     void set_position(const sf::Vector2f &position);
-    float get_roation() const;
-    bool set_rotation (float rotation);
+    float get_rotation() const;
+    void set_rotation (float rotation);
     bool is_alive() const; // should be updated
     void set_alive(bool alive);
     bool is_visible() const; // should be rendered
