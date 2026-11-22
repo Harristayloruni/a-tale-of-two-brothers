@@ -23,7 +23,7 @@ public:
     static std::shared_ptr<T> get(const std::string &path)
     {
         auto &cache = _cache<T>();
-        auto it = chache.find(path);
+        auto it = cache.find(path);
         if (it != cache.end())
         {
             return it->second;
