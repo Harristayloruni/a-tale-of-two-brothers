@@ -24,6 +24,7 @@ file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS engine/*.cpp engine/*.hpp)
 add_library(engine STATIC ${ENGINE_SOURCES})
 target_include_directories(engine PUBLIC engine engine/components engine/ai)
 target_link_libraries(engine PUBLIC sfml-graphics sfml-window sfml-system)
+target_link_libraries(engine PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
 
 # The Game
 file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS game/*.cpp game/*.hpp)
@@ -34,9 +35,16 @@ if(WIN32)
   target_link_libraries(a_tale_of_two_brothers PRIVATE sfml-main)
 endif()
 
-# set(SFML_INCS "lib/SFML/include")
-# link_directories("${CMAKE_BINARY_DIR}/lib/SFML/lib")
+# Copy resources/ next to the .exe after every build (Runtime Resources)
+add_custom_command(TARGET a_tale_of_two_brothers POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${PROJECT_SOURCE_DIR}/resources"
+          "$<TARGET_FILE_DIR:a_tale_of_two_brothers>/resources")
 
-# add_executable(game main.cpp)
-# target_include_directories(game PRIVATE ${SFML_INCS})
-# target_link_libraries(game sfml-graphics)
+# Windows- SFML-audio needs openal32.dll next to the .exe
+if(WIN32)
+  set(OPENAL_DLL "${PROJECT_SOURCE_DIR}/lib/SFML/extlibs/bin/x64/openal32.dll")
+  add_custom_command(TARGET a_tale_of_two_brothers POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OPENAL_DLL}"
+            "$<TARGET_FILE_DIR:a_tale_of_two_brothers>")
+endif()
