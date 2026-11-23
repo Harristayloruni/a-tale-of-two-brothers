@@ -70,7 +70,8 @@ void GameSystem::start(unsigned int logical_width, unsigned int logical_height,
         {
             if (_active_scene)
                 _active_scene->on_exit();
-            _active_scene = nullptr;
+            _active_scene = _next_scene;
+            _next_scene = nullptr;
             if (!_active_scene->is_loaded())
             {
                 _active_scene->load();
@@ -96,6 +97,20 @@ void GameSystem::start(unsigned int logical_width, unsigned int logical_height,
         _window->display();
     }
     _clean();
+}
+
+void GameSystem::_update(const float &dt)
+{
+    if (_active_scene)
+        _active_scene->update(dt);
+    Renderer::update(dt);
+}
+
+void GameSystem::_render()
+{
+    if (_active_scene)
+        _active_scene->render();
+    Renderer::render();
 }
 
 void GameSystem::_clean()

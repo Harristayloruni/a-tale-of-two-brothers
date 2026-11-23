@@ -1,77 +1,41 @@
-// #include <SFML/Graphics.hpp>
+// scene with a wizard you can move.
+#include "engine.hpp"
+#include "graphics_cmps.hpp"
+#include "math.hpp"
 
-// int main() {
-//   sf::RenderWindow window(sf::VideoMode(800, 600), "A Tale of Two Brothers");
-//   sf::CircleShape shape(100.f);
-//   shape.setFillColor(sf::Color::Green);
-
-//   while (window.isOpen()) {
-//     sf::Event event;
-//     while (window.pollEvent(event)) {
-//       if (event.type == sf::Event::Closed) {
-//         window.close();
-//       }
-//     }
-//     window.clear();
-//     window.draw(shape);
-//     window.display();
-//   }
-//   return 0;
-// }
-
-// Sandbox to test everything runs
-// makes and entity with two components and runs three fake frames
-
-// ch.2 - test ECM in the console
-#include "ecm.hpp"
-#include <iostream>
-
-// component that counts how many times it has been updated
-class CounterComponent : public Component
-{
-  public:
-    explicit CounterComponent(Entity *p) : Component(p) {}
-    void update(const float &dt) override
-    {
-      ++count;
-      std::cout << "  counter update " << count << " (dt " << dt << ")\n";
-    }
-    void render() override {}
-    int count = 0;
-};
-
-// A component that moves its entity to the right at 100 pixels per second
-class MoveRightComponent : public Component
-{
+// Temporary component - moves its entity with WASD 
+class KeyboardMoveComponent : public Component {
 public:
-  explicit MoveRightComponent(Entity *p) : Component(p) {}
-  void update(const float &dt) override
-  {
-    _parent->set_position(_parent->get_position() + sf::Vector2f(100.f * dt, 0.f));
+  KeyboardMoveComponent(Entity *p, float speed) : Component(p), _speed(speed) {}
+  void update(const float &dt) override {
+    sf::Vector2f dir(0.f, 0.f);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) dir.x -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dir.x += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) dir.y -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) dir.y += 1.f;
+    _parent->set_position(_parent->get_position() + math::normalize(dir) * _speed * dt);
   }
   void render() override {}
+
+private:
+  float _speed;
 };
 
-int main()
-{
-  EntityManager em;
-  auto wizard = std::make_shared<Entity>();
-  wizard->add_tag("player");
-  wizard->add_component<CounterComponent>();
-  wizard->add_component<MoveRightComponent>();
-  em.list.push_back(wizard);
-
-  for (int frame = 0; frame < 3; ++frame)
-  {
-    std::cout << "frame " << frame << "\n";
-    em.update(0.5f);
-    std::cout << " wizard x = " << wizard->get_position().x << "\n";
+class TestScene : public Scene {
+public:
+  void load() override {
+    auto wizard = make_entity();
+    wizard->set_position({960.f, 540.f});
+    auto sprite = wizard->add_component<SpriteComponent>("img/tilemap_packed.png", sf::IntRect(0, 112, 16, 16));
+    sprite->set_scale(4.f);
+    wizard->add_component<KeyboardMoveComponent>(320.f);
+    auto label = wizard->add_component<TextComponent>("fonts/RobotoMono-Regular.ttf", "Wizard", 22);
+    label->set_offset({0.f, -50.f});
   }
+};
 
-  std::cout << "counters found: " << wizard->get_components<CounterComponent>().size() << "\n";
-  std::cout << "players found: " << em.find("player").size() << "\n";
-  wizard->set_for_delete();
-  em.update(0.f);
-  std::cout << "entities left: " << em.list.size() << "\n";
+int main() {
+  GameSystem::set_active_scene(std::make_shared<TestScene>());
+  GameSystem::start(1920, 1080, "A Tale of Two Brothers", false);
   return 0;
 }

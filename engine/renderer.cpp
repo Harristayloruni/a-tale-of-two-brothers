@@ -36,6 +36,17 @@ void Renderer::shutdown()
     rw = nullptr;
 }
 
+void Renderer::update(const float &) {}
+
+void Renderer::queue(const sf::Drawable *d, int layer)
+{
+    if (layer < 0)
+        layer = 0;
+    if (layer >= LAYER_COUNT)
+        layer = LAYER_COUNT - 1;
+    layers[static_cast<size_t>(layer)].push_back(d);
+}
+
 void Renderer::render()
 {
     if (rw == nullptr)
