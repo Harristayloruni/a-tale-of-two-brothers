@@ -51,7 +51,7 @@ private:
     static void _clean();
     static void _update_view();
     static void _create_window();
-    static sf::FloatRect _calulate_viewport(const sf::Vector2u &screen, const sf::Vector2f &game);
+    static sf::FloatRect _calculate_viewport(const sf::Vector2u &screen, const sf::Vector2f &game);
 
     static std::shared_ptr<Scene> _active_scene;
     static std::shared_ptr<Scene> _next_scene;
