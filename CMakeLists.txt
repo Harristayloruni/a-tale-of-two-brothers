@@ -19,12 +19,16 @@ if(MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
 endif()
 
+# Tile level library (lab 4) - compiled once on its own, it can't see the game code
+add_library(tile_level STATIC tile_level_loader/level_system.cpp)
+target_include_directories(tile_level PUBLIC tile_level_loader)
+target_link_libraries(tile_level PUBLIC sfml-graphics)
+
 # Engine library
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS engine/*.cpp engine/*.hpp)
 add_library(engine STATIC ${ENGINE_SOURCES})
 target_include_directories(engine PUBLIC engine engine/components engine/ai)
-target_link_libraries(engine PUBLIC sfml-graphics sfml-window sfml-system)
-target_link_libraries(engine PUBLIC sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(engine PUBLIC tile_level sfml-graphics sfml-window sfml-system sfml-audio)
 
 # The Game
 file(GLOB_RECURSE GAME_SOURCES CONFIGURE_DEPENDS game/*.cpp game/*.hpp)
