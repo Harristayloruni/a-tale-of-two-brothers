@@ -1,5 +1,7 @@
 // engine.hpp - GameSystem (Window + game loop) and the scene base class
 // labs 2 (loop), 3 (static GameSystem), 4 (scenes), 5 (EntityManager), 7 (make_entity)
+// added for the coursework: window mode / resolution changes while the game runs,
+// input handed to the Input system, and an F3 performance overlay
 
 #pragma once
 #include "ecm.hpp"
@@ -42,10 +44,22 @@ public:
     static void set_active_scene(const std::shared_ptr<Scene> &scene);
     static std::shared_ptr<Scene> get_active_scene();
     static void quit();
+
+    // rebuild the window from Settings (resolution, window mode, vsync)
+    // the settings menu calls this after the player changes a video setting
+    static void apply_video_settings();
+
     static sf::Vector2f get_logical_size();
     static sf::Vector2f get_mouse_position();
 
+    // how many frames per second the game is running at
+    static float get_fps();
+
+    // which font the F3 overlay uses, it will not show until this is set
+    static void set_debug_font(const std::string &path);
+
 private:
+    static void _init();
     static void _update(const float &dt);
     static void _render();
     static void _clean();
@@ -60,4 +74,13 @@ private:
     static std::string _name;
     static bool _physics_enabled;
     static bool _quit;
+
+    // is the F3 overlay showing?
+    static bool _show_debug;
+
+    // the frames per second, worked out twice a second
+    static float _fps;
+
+    // the font file for the F3 overlay
+    static std::string _debug_font_path;
 };
