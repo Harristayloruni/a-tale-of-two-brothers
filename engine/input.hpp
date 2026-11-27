@@ -1,6 +1,6 @@
 // input.hpp - keyboard, mouse and controller input
-// added (not in the labs) - the labs read keys directly with hard-coded keys
-// (lab 2 controls[] array), which makes remapping impossible
+// added, not in the labs - the labs read keys directly with hard-coded keys,
+// lab 2, which makes remapping impossible
 // coursework needs remappable controls and controller support
 // GDD controls table:
 //   Move W/A/S/D (D-pad)     Interact/use item E (X / Square)

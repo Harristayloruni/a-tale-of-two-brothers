@@ -1,5 +1,5 @@
 // settings.hpp - user settings saved to disk as "key=value" lines
-// added (not in the labs) - coursework needs saved user preferences
+// added, not in the labs - coursework needs saved user preferences
 // and graphics options (resolution & window mode)
 // GDD: settings like controls and resolution are saved locally, game progress is not
 // the file lives in the user's config folder, not next to the .exe

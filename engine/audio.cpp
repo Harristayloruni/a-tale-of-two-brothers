@@ -18,7 +18,7 @@ namespace
     // pool = the 16 reusable sounds, empty until initialise() makes them
     // (made in initialise(), not here, same shutdown-order reason as the window)
     std::unique_ptr<std::array<sf::Sound, pool_size>> pool;
-    // next_sound = which of the 16 sounds to use next (lab 3 trick)
+    // next_sound = which of the 16 sounds to use next, lab 3
     unsigned char next_sound = 0;
     // music = the one music player, empty until initialise() makes it
     std::unique_ptr<sf::Music> music;

@@ -1,8 +1,8 @@
 // audio.hpp - sound effects and background music
-// added (no audio lab) - coursework needs some form of sound effect or music
+// added, no audio lab - coursework needs some form of sound effect or music
 // GDD media list: background music, "oof" when damaged, drinking sound
 // sound effects use an object pool, same idea as the bullet pool in
-// lab 3 Space Invaders 2 - a fixed set of sounds that get reused,
+// lab 3 - a fixed set of sounds that get reused,
 // so playing a sound never has to create a new one
 //
 // this file is the list of audio tools, the code behind them is in audio.cpp

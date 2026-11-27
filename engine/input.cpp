@@ -450,7 +450,7 @@ sf::Vector2f Input::get_move_vector()
     // l = the length of the direction
     const float l = std::sqrt(v.x * v.x + v.y * v.y);
 
-    // if moving, shrink the length to 1 so diagonal is not faster (lab 4)
+    // if moving, shrink the length to 1 so diagonal is not faster, lab 4
     return l > 0.f ? v / l : v;
 }
 
