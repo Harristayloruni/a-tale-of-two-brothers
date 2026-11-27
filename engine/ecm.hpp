@@ -10,12 +10,29 @@
 #include <utility>
 #include <vector>
 
-class Component;
+class Entity;
 class Scene;
 
-class Entity 
+class Component
 {
-    public:
+public:
+    Component() = delete; // a component must always have an owner
+    bool is_for_deletion() const;
+    void set_for_delete();
+    virtual void update(const float &dt) = 0; // =0: every comonent must write these
+    virtual void render() = 0;
+    virtual ~Component();
+    Entity *get_parent() const;
+
+protected:
+    Entity *const _parent; // the entity this component belongs to
+    bool _for_deletion;
+    explicit Component(Entity *const p);
+};
+
+class Entity
+{
+public:
     explicit Entity(Scene *scene = nullptr);
     virtual ~Entity();
 
@@ -25,7 +42,7 @@ class Entity
     const sf::Vector2f &get_position() const;
     void set_position(const sf::Vector2f &position);
     float get_rotation() const;
-    void set_rotation (float rotation);
+    void set_rotation(float rotation);
     bool is_alive() const; // should be updated
     void set_alive(bool alive);
     bool is_visible() const; // should be rendered
@@ -33,8 +50,8 @@ class Entity
     bool is_for_deletion() const; // should be deleted
     void set_for_delete();
 
-    Scene *get_scene() const; // which scene it owns
-    void add_tag(const std::string &tag); // "player", "enemy", ... 
+    Scene *get_scene() const;             // which scene it owns
+    void add_tag(const std::string &tag); // "player", "enemy", ...
     bool has_tag(const std::string &tag) const;
 
     // Create component of type T, attatch it, return it
@@ -100,37 +117,20 @@ class Entity
         return nullptr;
     }
 
-    protected:
-        std::vector<std::shared_ptr<Component>> _components;
-        sf::Vector2f _position;
-        float _rotation;
-        bool _alive;
-        bool _visible;
-        bool _for_deletion;
-        Scene *_scene;
-        std::vector<std::string> _tags;
+protected:
+    std::vector<std::shared_ptr<Component>> _components;
+    sf::Vector2f _position;
+    float _rotation;
+    bool _alive;
+    bool _visible;
+    bool _for_deletion;
+    Scene *_scene;
+    std::vector<std::string> _tags;
 };
 
-class Component
-{
-    public:
-        Component() = delete; // a component must always have an owner
-        bool is_for_deletion() const;
-        void set_for_delete();
-        virtual void update(const float &dt) = 0; // =0: every comonent must write these
-        virtual void render() = 0;
-        virtual ~Component();
-        Entity *get_parent() const;
-
-    protected:
-        Entity *const _parent; // the entity this component belongs to
-        bool _for_deletion;
-        explicit Component(Entity *const p);
-};
-
-// All the entities in one scene 
+// All the entities in one scene
 // lab 5 - entity management
-struct EntityManager 
+struct EntityManager
 {
     std::vector<std::shared_ptr<Entity>> list;
     void update(const float &dt); // removes entites flagged for deletion
